@@ -3,6 +3,6 @@ plotly
 sqlalchemy
 plotly.express
 
-plotly.graph_objects
+
 base64
 os
