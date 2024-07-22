@@ -3,7 +3,7 @@ import plotly.express as px
 import streamlit as st
 
 import sqlalchemy
-
+import pandas as pd
 import plotly.graph_objects as go
 
 #pull data from mysql
