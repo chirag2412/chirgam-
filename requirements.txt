@@ -1,6 +1,9 @@
 pandas
 plotly
 plotly.express
+pyodbc
+sqlalchemy
+pymysql
 
 
 
