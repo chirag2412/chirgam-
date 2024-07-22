@@ -2,7 +2,7 @@ pandas
 plotly
 sqlalchemy
 plotly.express
-plotly.io
+
 plotly.graph_objects
 base64
 os
