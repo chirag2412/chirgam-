@@ -2,7 +2,6 @@ pandas
 plotly
 sqlalchemy
 plotly.express
-base64
-os
+
 
 
