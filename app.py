@@ -1,15 +1,8 @@
 
 import plotly.express as px
 import streamlit as st
-from streamlit_jupyter import StreamlitPatcher,tqdm
-sp=StreamlitPatcher()
+
 import sqlalchemy
-
-warnings.filterwarnings('ignore')
-import plotly.io as pio
-pio.templates.default='plotly'
-pio.renderers.default='notebook'
-
 
 import plotly.graph_objects as go
 
