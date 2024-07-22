@@ -5,9 +5,23 @@ import streamlit as st
 import sqlalchemy
 import pandas as pd
 import plotly.graph_objects as go
+import logging
+import os
+from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
+
+logging.basicConfig(level=logging.INFO)
+
+db_url = os.getenv("DATABASE_URL")
+try:
+    engine = create_engine('mysql+pymysql://root:root@localhost:3306/new_schema')
+    connection = engine.connect()
+    logging.info("Database connection successful")
+except OperationalError as e:
+    logging.error(f"Database connection failed: {e}")
 
 #pull data from mysql
-engine=sqlalchemy.create_engine('mysql+pymysql://root:root@localhost:3306/new_schema')
+
 df_2019=pd.read_sql_table('constituency_wise_results_2019',engine)
 df_2019['voterturnout_ratio']=(df_2019['total_votes']/df_2019['total_electors'])*100
 df_2014=pd.read_sql_table('2014',engine)
