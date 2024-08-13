@@ -1,25 +1,44 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-import sqlalchemy
+from sqlalchemy import create_engine
+from sklearn.neighbors import NearestNeighbors
+import pyodbc
+import pymysql
 import base64
 import os
-engine=sqlalchemy.create_engine('mysql+pymysql://root:root@localhost:3306/new_schema')
-df_2019=pd.read_sql_table('constituency_wise_results_2019',engine)
+@st.cache(allow_output_mutation=True)
+def get_connection():
+    return create_engine("('mysql+pyodbc://root:root@localhost:3306/new_schema', 
+    fast_executemany = True
+    )
+  1 = 'SELECT * FROM dbo.movie_rating_count'
+
+@st.cache
+def df_2019():
+  df1 = pd.read_sql_query('constituency_wise_results_2019', get_connection())
+  return df_2019
 df_2019['voterturnout_ratio']=(df_2019['total_votes']/df_2019['total_electors'])*100
-df_2014=pd.read_sql_table('2014',engine)
+@st.cache
+def df_2014():
+  df1 = pd.read_sql_query('2014', get_connection())
+  return df_2014
 df_2014['voterturnout_ratio']=(df_2014['total_votes']/df_2014['total_electors'])*100
 df_2014['year']=2014
 df_2019['year']=2019
 df2014_vs_2019=pd.concat([df_2019,df_2014],axis=0)
-df=pd.read_sql_query('select distinct(m.state),m.party,m.candidate,m.sex,m.max_voter_turnout_ratio, rank()over( order by m.max_voter_turnout_ratio desc) as party_rank from(select  state,party,candidate,sex,max((total_votes/total_electors)*100) as max_voter_turnout_ratio from new_schema.2014  group by state,party,candidate,sex)m order by party_rank ',engine)
-df['year']=2014
-df2014=df.copy()
-df1=pd.read_sql_query('select distinct(m.state),m.party,m.sex,m.candidate,m.max_voter_turnout_ratio, rank()over( order by m.max_voter_turnout_ratio desc) as party_rank from (select  state,party,candidate,sex,max((total_votes/total_electors)*100) as max_voter_turnout_ratio from new_schema.constituency_wise_results_2019  group by state,party,candidate,sex)m order by party_rank ',engine)
-df1['year']=2019
-df2019=df1.copy()
+@st.cache
+def df2014():
+  df1 = pd.read_sql_query('select distinct(m.state),m.party,m.candidate,m.sex,m.max_voter_turnout_ratio, rank()over( order by m.max_voter_turnout_ratio desc) as party_rank from(select  state,party,candidate,sex,max((total_votes/total_electors)*100) as max_voter_turnout_ratio from new_schema.2014  group by state,party,candidate,sex)m order by party_rank ', get_connection())
+  return df2014
+df_2019['voterturnout_ratio']=(df_2019['total_votes']/df_2019['total_electors'])*100
+@st.cache
+def df2019():
+  df1 = pd.read_sql_query('select distinct(m.state),m.party,m.sex,m.candidate,m.max_voter_turnout_ratio, rank()over( order by m.max_voter_turnout_ratio desc) as party_rank from (select  state,party,candidate,sex,max((total_votes/total_electors)*100) as max_voter_turnout_ratio from new_schema.constituency_wise_results_2019  group by state,party,candidate,sex)m order by party_rank '', get_connection())
+  return df2019
 
-
+df2014['year']=2014
+df2019['year']=2019
 df2=df2014.drop_duplicates(subset=['state'])
 df2.reset_index(inplace=True)
 df2.drop(columns=['index'],inplace=True)
