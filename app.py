@@ -2,9 +2,8 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-
 #uploading and cleaning data
-df=pd.read_excel('C://Users//dell//Downloads//excel dash board and power query//sales.xlsx',)
+df=pd.read_excel('C:\\Users\\dell\\Downloads\\excel dash board and power query//sales.xlsx')
 df2=df.rename(columns = {'PAYMENT MODE':'PAYMENT_MODE'})
 df1=df2.rename(columns = {'SALE TYPE':'SALE_TYPE'})
 df=df1.copy()
@@ -63,7 +62,7 @@ st.markdown("""---""")
 #exploratory data anlusis using diffrent chart
 #sales_by_category_line
 sales_by_category_line = (
-    df_selection.groupby(by=["Category"]).sum()[["sum of total selling price"]].sort_values(by="sum of total selling price")
+    df_selection.groupby(by=["Category"]).sum(numeric_only=True)[["sum of total selling price"]].sort_values(by="sum of total selling price")
 )
 fig_CATEGORY_sales = px.bar(
     sales_by_category_line,
@@ -79,7 +78,7 @@ fig_CATEGORY_sales.update_layout(
     xaxis=(dict(showgrid=False))
 )
 #sales_by_day
-sales_by_day = df_selection.groupby(by=["day"]).sum()[["sum of total selling price"]]
+sales_by_day = df_selection.groupby(by=["day"]).sum(numeric_only=True)[["sum of total selling price"]]
 fig_daily_sales = px.line(
     sales_by_day,
     x=sales_by_day.index,
@@ -94,7 +93,7 @@ fig_daily_sales.update_layout(
     yaxis=(dict(showgrid=False)),
 )
 #sales_by_month 
-sales_by_month = df_selection.groupby(by=["months"]).sum()[["Profit"]].sort_values(by="months")
+sales_by_month = df_selection.groupby(by=["months"]).sum(numeric_only=True)[["Profit"]].sort_values(by="months")
 fig_monthly_profit = px.bar(
     sales_by_month,
     x=sales_by_month.index,
@@ -109,7 +108,7 @@ fig_monthly_profit.update_layout(
     yaxis=(dict(showgrid=False)),
 )
 #sales_by_paymnet_mode
-sales_by_paymnet_mode = df_selection.groupby(by=["PAYMENT_MODE"]).sum()[["Profit"]]
+sales_by_paymnet_mode = df_selection.groupby(by=["PAYMENT_MODE"]).sum(numeric_only=True)[["Profit"]]
 fig_PAYMENT_MODE = px.pie(
     sales_by_paymnet_mode,
     values='Profit',
@@ -117,7 +116,7 @@ fig_PAYMENT_MODE = px.pie(
     title="<bsales_by_paymnet_mode</b>",
     template="plotly_white",
 )
-sales_by_sales_type = df_selection.groupby(by=["SALE_TYPE"]).sum()[["Profit"]]
+sales_by_sales_type = df_selection.groupby(by=["SALE_TYPE"]).sum(numeric_only=True)[["Profit"]]
 fig_SALE_TYPE = px.pie(
     sales_by_sales_type,
     values='Profit',
