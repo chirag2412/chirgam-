@@ -1,7 +1,7 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from streamlit_jupyter import StreamlitPatcher,tqdm
+
 sp=StreamlitPatcher()
 #uploading and cleaning data
 df=pd.read_excel('C:\\Users\\dell\\Downloads\\excel dash board and power query//Sales-Dashboard-practice-file (version 1).xlsb','Input Data')
