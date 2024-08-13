@@ -3,6 +3,7 @@ plotly
 plotly.express
 sqlalchemy
 base
+pymysql
 
 
 
