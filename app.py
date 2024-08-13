@@ -4,7 +4,7 @@ import streamlit as st
 
 
 #uploading and cleaning data
-df=pd.read_excel('C://Users//dell//Downloads//excel dash board and power query//Sales-Dashboard-practice-file (version 1).xlsb','Input Data')
+df=pd.read_excel('C://Users//dell//Downloads//excel dash board and power query//sales.xlsx','Input Data')
 df2=df.rename(columns = {'PAYMENT MODE':'PAYMENT_MODE'})
 df1=df2.rename(columns = {'SALE TYPE':'SALE_TYPE'})
 df=df1.copy()
