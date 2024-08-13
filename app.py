@@ -9,7 +9,7 @@ import base64
 import os
 @st.cache(allow_output_mutation=True)
 def get_connection():
-    return create_engine("('mysql+pyodbc://root:root@localhost:3306/new_schema', 
+    return create_engine('mysql+pyodbc://root:root@localhost:3306/new_schema', 
     fast_executemany = True
     )
   1 = 'SELECT * FROM dbo.movie_rating_count'
