@@ -4,6 +4,7 @@ plotly.express
 sqlalchemy
 base
 pymysql
+pyodbc
 
 
 
