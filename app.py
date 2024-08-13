@@ -34,7 +34,7 @@ def df2014():
 df_2019['voterturnout_ratio']=(df_2019['total_votes']/df_2019['total_electors'])*100
 @st.cache
 def df2019():
-  df1 = pd.read_sql_query('select distinct(m.state),m.party,m.sex,m.candidate,m.max_voter_turnout_ratio, rank()over( order by m.max_voter_turnout_ratio desc) as party_rank from (select  state,party,candidate,sex,max((total_votes/total_electors)*100) as max_voter_turnout_ratio from new_schema.constituency_wise_results_2019  group by state,party,candidate,sex)m order by party_rank '', get_connection())
+  df1 = pd.read_sql_query('select distinct(m.state),m.party,m.sex,m.candidate,m.max_voter_turnout_ratio, rank()over( order by m.max_voter_turnout_ratio desc) as party_rank from (select  state,party,candidate,sex,max((total_votes/total_electors)*100) as max_voter_turnout_ratio from new_schema.constituency_wise_results_2019  group by state,party,candidate,sex)m order by party_rank', get_connection())
   return df2019
 
 df2014['year']=2014
