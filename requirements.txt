@@ -1,10 +1,11 @@
-pandas
+
 plotly
 plotly.express
-sqlalchemy
-base
-pymysql
+streamlit==1.5.0
+numpy==1.19.5
+pandas==1.3.5
+sqlalchemy==1.4.31
+scikit-learn
+pymysql==1.0.2
 pyodbc
-
-
 
