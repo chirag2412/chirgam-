@@ -1,7 +1,8 @@
 pandas
 plotly
 plotly.express
-pyodbc
-fsspec
+sqlalchemy
+base
+os
 
 
