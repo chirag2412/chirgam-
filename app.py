@@ -1,11 +1,9 @@
-
 import pandas as pd
 import plotly.express as px
 import streamlit as st
 import sqlalchemy
 import base64
 import os
-#pull data from mysql
 engine=sqlalchemy.create_engine('mysql+pymysql://root:root@localhost:3306/new_schema')
 df_2019=pd.read_sql_table('constituency_wise_results_2019',engine)
 df_2019['voterturnout_ratio']=(df_2019['total_votes']/df_2019['total_electors'])*100
@@ -14,15 +12,13 @@ df_2014['voterturnout_ratio']=(df_2014['total_votes']/df_2014['total_electors'])
 df_2014['year']=2014
 df_2019['year']=2019
 df2014_vs_2019=pd.concat([df_2019,df_2014],axis=0)
-#extract state who won in 2014 and 2019 and givning rank
 df=pd.read_sql_query('select distinct(m.state),m.party,m.candidate,m.sex,m.max_voter_turnout_ratio, rank()over( order by m.max_voter_turnout_ratio desc) as party_rank from(select  state,party,candidate,sex,max((total_votes/total_electors)*100) as max_voter_turnout_ratio from new_schema.2014  group by state,party,candidate,sex)m order by party_rank ',engine)
 df['year']=2014
 df2014=df.copy()
 df1=pd.read_sql_query('select distinct(m.state),m.party,m.sex,m.candidate,m.max_voter_turnout_ratio, rank()over( order by m.max_voter_turnout_ratio desc) as party_rank from (select  state,party,candidate,sex,max((total_votes/total_electors)*100) as max_voter_turnout_ratio from new_schema.constituency_wise_results_2019  group by state,party,candidate,sex)m order by party_rank ',engine)
 df1['year']=2019
 df2019=df1.copy()
-#above code will give me maximum voter turnout ration for state,gender,party etc.below code will give me who will won in particular state
-#so this two code part I juse use to extract winning data
+
 
 df2=df2014.drop_duplicates(subset=['state'])
 df2.reset_index(inplace=True)
@@ -40,18 +36,12 @@ st.set_page_config(page_title='Election Dashbard',
 )
 
 
-# Path to your local image
 
-
-# Get the base64 string of the image
 def get_base64_encoded_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
-# Path to your local image
- # Ensure this path is correct
 
-# Check if the image file exists
 background_image_path = "C://Users//Dell//Downloads\\istockphoto-1140760252-612x612.jpg"
 
 if not os.path.isfile(background_image_path):
@@ -103,9 +93,9 @@ header, .css-1v3fvcr {
 </style>
 """
 
-# Inject the CSS into the Streamlit app
+
 st.markdown(background_css + content_css, unsafe_allow_html=True)
-#
+
 st.title('indian election for 2019 and 2014 Dashboard')
 st.markdown('##')
 
@@ -152,21 +142,20 @@ with other_col2:
 
 df=df14_19.copy()
 
-# plotly table setup
+
 main_col3, other_col3,other_col4 = st.columns([1,1,1])
 with main_col3:
     
     st.write("winning party table:")
     table_year = st.selectbox('Select Year for Table', df14_19['year'].unique(), key='table_year')
 
-    # Filter data for the selected year for the table
+   
     table_data = df14_19[df14_19['year'] == table_year]
 
-    # Display the table
+    
     st.dataframe(table_data)
      
 
-# update layout with buttons, and show the figure
 
 with other_col3:
     df_repeat=df14_19[df14_19.duplicated(subset=['state','party'],keep=False)] 
@@ -179,28 +168,27 @@ with other_col3:
     result = df_repeat.groupby('year')['state'].unique().reset_index()
     result = result.explode('state')
     df = pd.merge(hj, result, on=['year', 'state'], how='inner')
-# Explode the list of states into separate rows
+
     
 
     df_filtered = df[df['year'].isin([2014, 2019])]
 
-# Pivoting the DataFrame to have separate columns for 2014 and 2019
+
     df_pivot = df_filtered.pivot(index='state', columns='year', values='max_voter_turnout_ratio').reset_index()
     
 
-# Renaming columns for clarity
+
     df_pivot.columns = ['state', 'value_2014', 'value_2019']
     df_pivot['gain/loss']=df_pivot['value_2019']-df_pivot['value_2014']
     st.write("party gain/loss who came in two consucative years:")
     
     
 
-    # Display the table
+   
     st.dataframe(df_pivot)
      
 
-    # Display the table
-    
+   
      
 
 
@@ -230,12 +218,11 @@ with other_col4:
     st.write("table for winner and runnuerup with margin diffrent:")
     table_year2 = st.selectbox('Select Year for Table', df['year'].unique(), key='table_year2')
 
-    # Filter data for the selected year for the table
     table_data2 = df[df['year'] == table_year2]
 
-    # Display the table
+   
     st.dataframe(table_data2)
-    # Display the table
+   
    
     
 
@@ -249,8 +236,6 @@ with main_col:
     df1=pd.read_sql_query('select distinct(m.state),m.party,m.sex,m.candidate,m.max_voter_turnout_ratio, rank()over( order by m.max_voter_turnout_ratio desc) as party_rank from (select  state,party,candidate,sex,max((total_votes/total_electors)*100) as max_voter_turnout_ratio from new_schema.constituency_wise_results_2019  group by state,party,candidate,sex)m order by party_rank ',engine)
     df1['year']=2019
     df2019=df1.copy()
-#above code will give me maximum voter turnout ration for state,gender,party etc.below code will give me who will won in particular state
-#so this two code part I juse use to extract winning data
 
     df2=df2014.drop_duplicates(subset=['state'])
     df2.reset_index(inplace=True)
@@ -266,19 +251,18 @@ with main_col:
     df_nrepeat.sort_values('party_rank',inplace=True)
     df_nrepeat_10=df_nrepeat.nlargest(10,'max_voter_turnout_ratio') 
     df = df_nrepeat.copy()
-# Streamlit UI components
 
 
     year = st.selectbox('Select Year', df['year'].unique())
 
 
-# Filter data based on selections
+
     filtered_df = df[df['year'] == year]
 
-# Create Plotly figure
+
     fig4= px.bar(filtered_df, x='state', y='max_voter_turnout_ratio',color='party',title='not repeated party for two consucative year')
 
-# Display Plotly figure
+
     st.plotly_chart(fig4)
     turnout = filtered_df['max_voter_turnout_ratio'].values[0] if not filtered_df.empty else None
     if turnout:
@@ -293,7 +277,7 @@ with other_col1:
     filtered_df = df[(df['year'] == year) & (df['party'] == party)]
     fig5= px.bar(filtered_df, x='state', y='max_voter_turnout_ratio',title='two major party details')
 
-# Display Plotly figure
+
     st.plotly_chart(fig5)
     turnout = filtered_df['max_voter_turnout_ratio'].values[0] if not filtered_df.empty else None
     if turnout:
@@ -302,15 +286,7 @@ with other_col1:
         st.write('No data available for the selected year and state.')
 
 
-# Display Plotly figure
-  
 
-
-
-# Function to update the plot
-
-
-# Use ipywidgets.interactive to create an interactive plot
 
 
 
